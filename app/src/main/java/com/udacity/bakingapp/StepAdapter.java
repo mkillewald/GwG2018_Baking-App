@@ -14,7 +14,6 @@ import java.util.List;
 public class StepAdapter extends
         RecyclerView.Adapter<StepAdapter.StepAdapterImageViewHolder> {
 
-//    private final RecipeListActivity mParentActivity;
     private List<Step> mSteps;
     private final StepAdapterOnClickHandler mClickHandler;
 
@@ -60,6 +59,7 @@ public class StepAdapter extends
         Step step = mSteps.get(position);
 
         holder.mStepItemBinding.setStep(step);
+        holder.mStepItemBinding.tvStepId.setText(String.valueOf(step.getId()));
         holder.mStepItemBinding.tvStepName.setText(step.getShortDescription());
     }
 
@@ -68,7 +68,8 @@ public class StepAdapter extends
         return mSteps == null ? 0 : mSteps.size();
     }
 
-    public void setIngreients(List<Step> steps) {
+    public void setSteps(List<Step> steps) {
         mSteps = steps;
+        notifyDataSetChanged();
     }
 }

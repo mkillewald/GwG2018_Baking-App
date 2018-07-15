@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/recipe_detail_fragment"
         android:name="com.udacity.bakingapp.RecipeDetailFragment"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 </LinearLayout>

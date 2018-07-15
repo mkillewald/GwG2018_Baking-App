@@ -1,96 +1,35 @@
 package com.udacity.bakingapp;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.databinding.FragmentRecipeDetailBinding;
+import com.udacity.bakingapp.model.Ingredient;
+import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.model.Step;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecipeDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecipeDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class RecipeDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.List;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class RecipeDetailFragment extends Fragment implements
+        StepAdapter.StepAdapterOnClickHandler {
+    
+    private static final String TAG = RecipeDetailFragment.class.getSimpleName();
 
-    private OnFragmentInteractionListener mListener;
+    private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
 
-    public RecipeDetailFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RecipeDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeDetailFragment newInstance(String param1, String param2) {
-        RecipeDetailFragment fragment = new RecipeDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
+    private Recipe mRecipe;
+    private OnStepClickListener mListener;
+    
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -101,8 +40,121 @@ public class RecipeDetailFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnStepClickListener {
+        void onStepSelected(int stepIndex);
     }
+
+    public RecipeDetailFragment() {
+        // Mandatory empty constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param recipe The recipe the fragment will display
+     * @return A new instance of fragment RecipeDetailFragment.
+     */
+    public static RecipeDetailFragment newInstance(Recipe recipe) {
+        RecipeDetailFragment fragment = new RecipeDetailFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(EXTRA_RECIPE, recipe);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            mRecipe = getArguments().getParcelable(EXTRA_RECIPE);
+//        }
+
+        if (savedInstanceState == null) {
+            Intent intent = getActivity().getIntent();
+            if (intent != null) {
+                mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
+            }
+        } else {
+            mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        FragmentRecipeDetailBinding binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_recipe_detail, container, false);
+
+        final View rootView = binding.getRoot();
+
+        binding.tvIngredientList.setText(formatIngredientList());
+
+        StepAdapter stepAdapter = new StepAdapter(this);
+        stepAdapter.setSteps(mRecipe.getSteps());
+
+        LinearLayoutManager stepLayoutManager = new LinearLayoutManager(getActivity());
+        binding.rvStepList.setLayoutManager(stepLayoutManager);
+        binding.rvStepList.setAdapter(stepAdapter);
+//        binding.rvStepList.setNestedScrollingEnabled(false);
+
+        return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(EXTRA_RECIPE, mRecipe);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onClick(Step step) {
+        if (mListener != null) {
+            mListener.onStepSelected(step.getId());
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mListener = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + getString(R.string.implement_OnStepClickListener));
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * Returns formatted list of ingredients
+     * @return the formatted String list of ingredients
+     */
+    private String formatIngredientList() {
+        List<Ingredient> ingredients = mRecipe.getIngredients();
+        StringBuilder builder = new StringBuilder();
+        int listSize = ingredients.size();
+
+        if (listSize > 0 ) {
+            for (int i = 0; i < listSize; i++) {
+                builder.append(ingredients.get(i).formatQuantityAndMeasure());
+                if (i != listSize - 1) {
+                    builder.append("\n");
+                }
+            }
+        }
+
+        return builder.toString();
+    }
+
 }

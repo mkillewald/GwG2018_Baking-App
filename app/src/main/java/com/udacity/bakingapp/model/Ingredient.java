@@ -7,6 +7,8 @@ import android.os.Parcelable;
 
 public class Ingredient implements Parcelable {
 
+    private static final String NO_UNIT = "UNIT";
+
     private double quantity;
     private String measure;
     private String ingredient;
@@ -34,7 +36,9 @@ public class Ingredient implements Parcelable {
         public Ingredient[] newArray(int size) { return (new Ingredient[size]); }
     };
 
-    public double getQuantity() { return quantity; }
+    public double getQuantity() {
+        return quantity;
+    }
 
     public String getMeasure() {
         return measure;
@@ -42,6 +46,31 @@ public class Ingredient implements Parcelable {
 
     public String getIngredient() {
         return ingredient;
+    }
+
+    /**
+     * Returns quantity, measure and ingredient
+     * @return formatted String with quantity, measure and ingredient
+     */
+    public String formatQuantityAndMeasure() {
+        StringBuilder builder = new StringBuilder();
+
+        if (getQuantity() % 1 == 0 ) {
+            builder.append((int) getQuantity());
+        } else {
+            builder.append(getQuantity());
+        }
+
+        builder.append(" ");
+
+        if (!getMeasure().equals(NO_UNIT)) {
+            builder.append(getMeasure().toLowerCase());
+            builder.append(" ");
+        }
+
+        builder.append(getIngredient());
+
+        return builder.toString();
     }
 
 }

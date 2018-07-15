@@ -2,6 +2,8 @@ package com.udacity.bakingapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,38 +40,32 @@ public class RecipeListFragment extends Fragment implements
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipe> mRecipes;
 
-    // Define a new interface that triggers a callback in the host activity
-    OnRecipeCardClickListener mCallback;
+    OnRecipeCardClickListener mListener;
 
-    // OnRecipeCardClickListener interface, calls a method in the host activity
-    // named onRecipeCardSelected
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnRecipeCardClickListener {
         void onRecipeCardSelected(Recipe recipe);
     }
 
-    // Mandatory empty constructor
     public RecipeListFragment() {
+        // Mandatory empty constructor
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        // This makes sure that the host activity has implemented the callback interface
-        // If not, it throws an exception
-        try {
-            mCallback = (OnRecipeCardClickListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + getString(R.string.implement_OnRecipeCardClickListener));
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        final View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_recipe_list, container,
+                false);
 
         mRecyclerView = rootView.findViewById(R.id.rv_recipe_list);
 
@@ -106,7 +102,29 @@ public class RecipeListFragment extends Fragment implements
 
     @Override
     public void onClick(Recipe recipe) {
-        mCallback.onRecipeCardSelected(recipe);
+        if (mListener != null) {
+            mListener.onRecipeCardSelected(recipe);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mListener = (OnRecipeCardClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + getString(R.string.implement_OnRecipeCardClickListener));
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     void fetchRecipeList(URL url) throws IOException {

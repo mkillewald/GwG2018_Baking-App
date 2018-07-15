@@ -8,7 +8,10 @@ import com.udacity.bakingapp.model.Recipe;
 
 public class MainActivity extends AppCompatActivity implements
         RecipeListFragment.OnRecipeCardClickListener {
+
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void onRecipeCardSelected(Recipe recipe) {
         Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe);
+        intent.putExtra(EXTRA_RECIPE, recipe);
         startActivity(intent);
     }
 }

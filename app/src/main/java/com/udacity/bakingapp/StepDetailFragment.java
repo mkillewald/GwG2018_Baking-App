@@ -1,52 +1,60 @@
 package com.udacity.bakingapp;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
+import com.udacity.bakingapp.model.Recipe;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link StepDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link StepDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class StepDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = StepDetailFragment.class.getSimpleName();
 
-    private OnFragmentInteractionListener mListener;
+    private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
+    private static final String EXTRA_STEP_INDEX = "stepIndex";
+
+    private Recipe mRecipe;
+    private int mStepIndex;
+//    private OnFragmentInteractionListener mListener;
+//
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     * <p>
+//     * See the Android Training lesson <a href=
+//     * "http://developer.android.com/training/basics/fragments/communicating.html"
+//     * >Communicating with Other Fragments</a> for more information.
+//     */
+//    public interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        void onFragmentInteraction(Uri uri);
+//    }
 
     public StepDetailFragment() {
-        // Required empty public constructor
+        // Mandatory empty constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StepDetailFragment.
+     * @param recipe The recipe the fragment will display
+     * @return A new instance of fragment RecipeDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static StepDetailFragment newInstance(String param1, String param2) {
+    public static StepDetailFragment newInstance(Recipe recipe, int stepIndex) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(EXTRA_RECIPE, recipe);
+        args.putInt(EXTRA_STEP_INDEX, stepIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,55 +62,66 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_step_detail, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+            // two pane fragment is launched
+            mRecipe = getArguments().getParcelable(EXTRA_RECIPE);
+            mStepIndex = getArguments().getInt(EXTRA_STEP_INDEX);
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            // single pane activity is launched
+            if (savedInstanceState == null) {
+                Intent intent = getActivity().getIntent();
+                if (intent != null) {
+                    mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
+                    mStepIndex = intent.getIntExtra(EXTRA_STEP_INDEX, 0);
+                }
+            } else {
+                mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
+                mStepIndex = savedInstanceState.getInt(EXTRA_STEP_INDEX);
+            }
         }
     }
 
+    @Nullable
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        FragmentStepDetailBinding binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_step_detail, container, false);
+
+        final View rootView = binding.getRoot();
+
+        // TODO - fix index out of bounds error
+        binding.tvStepDescription.setText(mRecipe.getSteps().get(mStepIndex).getDescription());
+
+        return rootView;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public void setRecipe(Recipe recipe) {
+        mRecipe = recipe;
     }
+
+    public void setStepIndex(int stepIndex) {
+        mStepIndex = stepIndex;
+    }
+
+    //    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + getString(R.string.implement_OnClickListener));
+//        }
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
+
+
 }

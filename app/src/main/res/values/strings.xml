@@ -7,8 +7,6 @@
     <string name="network_error">Network is not responding.</string>
     <string name="implement_OnRecipeCardClickListener"> must implement OnRecipeCardClickListener</string>
     <string name="implement_OnStepClickListener"> must implement OnStepClickListener</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="implement_OnButtonClickListener"> must implement OnButtonClickListener</string>
 
 </resources>

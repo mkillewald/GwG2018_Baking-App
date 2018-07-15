@@ -14,42 +14,12 @@ import java.util.List;
 public class RecipeAdapter extends
         RecyclerView.Adapter<RecipeAdapter.RecipeAdapterImageViewHolder> {
 
-//    private final RecipeListActivity mParentActivity;
     private List<Recipe> mRecipes;
     private final RecipeAdapterOnClickHandler mClickHandler;
 
     public interface RecipeAdapterOnClickHandler {
         void onClick(Recipe recipe);
     }
-
-//    private final boolean mTwoPane;
-//    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            Recipe recipe = (Recipe) view.getTag();
-//            if (mTwoPane) {
-//                Bundle arguments = new Bundle();
-//                arguments.putParcelable(RecipeDetailFragment.EXTRA_RECIPE, recipe);
-//                RecipeDetailFragment fragment = new RecipeDetailFragment();
-//                fragment.setArguments(arguments);
-//                mParentActivity.getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.recipe_detail_container, fragment)
-//                        .commit();
-//            } else {
-//                Context context = view.getContext();
-//                Intent intent = new Intent(context, RecipeDetailActivity.class);
-//                intent.putExtra(RecipeDetailFragment.EXTRA_RECIPE, recipe);
-//
-//                context.startActivity(intent);
-//            }
-//        }
-//    };
-
-//    RecipeAdapter (RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
-//        mRecipes = recipes;
-//        mParentActivity = parent;
-//        mTwoPane = twoPane;
-//    }
 
     public RecipeAdapter(RecipeAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;

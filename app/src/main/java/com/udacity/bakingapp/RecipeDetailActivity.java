@@ -25,6 +25,11 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
         if (findViewById(R.id.recipe_step_detail_layout) != null) {
             mTwoPane = true;
+            StepDetailFragment fragment = new StepDetailFragment();
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.step_detail_container, fragment)
+                    .commit();
         } else {
             mTwoPane = false;
         }

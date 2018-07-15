@@ -2,6 +2,7 @@ package com.udacity.bakingapp;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,13 @@ import java.util.List;
 
 public class StepAdapter extends
         RecyclerView.Adapter<StepAdapter.StepAdapterImageViewHolder> {
+    private static final String TAG = StepAdapter.class.getSimpleName();
 
     private List<Step> mSteps;
     private final StepAdapterOnClickHandler mClickHandler;
 
     public interface StepAdapterOnClickHandler {
-        void onClick(Step step);
+        void onClick(int stepIndex);
     }
 
     public StepAdapter(StepAdapterOnClickHandler clickHandler) {
@@ -39,7 +41,7 @@ public class StepAdapter extends
         public void onClick(View view) {
             int adapterPosition  = getAdapterPosition();
             Step step = mSteps.get(adapterPosition);
-            mClickHandler.onClick(step);
+            mClickHandler.onClick(adapterPosition);
         }
     }
 

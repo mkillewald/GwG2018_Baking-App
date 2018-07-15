@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.udacity.bakingapp.model.Recipe;
 
-public class StepDetailActivity extends AppCompatActivity  {
+public class StepDetailActivity extends AppCompatActivity {
     private static final String TAG = StepDetailActivity.class.getSimpleName();
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
@@ -34,4 +34,5 @@ public class StepDetailActivity extends AppCompatActivity  {
         }
 
     }
+
 }

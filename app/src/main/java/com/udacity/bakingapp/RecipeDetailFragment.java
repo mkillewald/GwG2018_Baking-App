@@ -110,9 +110,9 @@ public class RecipeDetailFragment extends Fragment implements
     }
 
     @Override
-    public void onClick(Step step) {
+    public void onClick(int stepIndex) {
         if (mListener != null) {
-            mListener.onStepSelected(step.getId());
+            mListener.onStepSelected(stepIndex);
         }
     }
 

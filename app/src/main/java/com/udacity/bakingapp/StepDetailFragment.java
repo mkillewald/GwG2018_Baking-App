@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
 import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.model.Step;
 
 public class StepDetailFragment extends Fragment {
 
@@ -20,24 +22,9 @@ public class StepDetailFragment extends Fragment {
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
     private static final String EXTRA_STEP_INDEX = "stepIndex";
 
+    private FragmentStepDetailBinding mBinding;
     private Recipe mRecipe;
     private int mStepIndex;
-//    private OnFragmentInteractionListener mListener;
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -87,13 +74,26 @@ public class StepDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        FragmentStepDetailBinding binding = DataBindingUtil.inflate(
+        mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_detail, container, false);
 
-        final View rootView = binding.getRoot();
+        final View rootView = mBinding.getRoot();
 
-        // TODO - fix index out of bounds error
-        binding.tvStepDescription.setText(mRecipe.getSteps().get(mStepIndex).getDescription());
+        mBinding.tvStepDescription.setText(mRecipe.getSteps().get(mStepIndex).getDescription());
+
+        mBinding.btnPrevStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickPrevOrNext(view);
+            }
+        });
+
+        mBinding.btnNextStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickPrevOrNext(view);
+            }
+        });
 
         return rootView;
     }
@@ -106,22 +106,20 @@ public class StepDetailFragment extends Fragment {
         mStepIndex = stepIndex;
     }
 
-    //    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + getString(R.string.implement_OnClickListener));
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+    private void onClickPrevOrNext(View view) {
+        if (view == mBinding.btnPrevStep) {
+            if (mStepIndex != 0) mStepIndex--;
+        } else {
+            if (mStepIndex < mRecipe.getSteps().size() - 1) mStepIndex++;
+        }
 
+        updateStepDetail();
+    }
 
+    private void updateStepDetail() {
+        Step step = mRecipe.getSteps().get(mStepIndex);
+        mBinding.tvStepDescription.setText(step.getDescription());
+    }
 }
+
+

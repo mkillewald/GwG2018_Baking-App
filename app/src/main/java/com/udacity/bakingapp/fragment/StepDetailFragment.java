@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class StepDetailFragment extends Fragment {
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
     private static final String EXTRA_STEP_INDEX = "stepIndex";
+    private static final String EXTRA_TWO_PANE = "twoPaneBoolean";
 
     private FragmentStepDetailBinding mBinding;
     private Recipe mRecipe;
@@ -31,42 +33,20 @@ public class StepDetailFragment extends Fragment {
         // Mandatory empty constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param recipe The recipe the fragment will display
-     * @return A new instance of fragment RecipeDetailFragment.
-     */
-    public static StepDetailFragment newInstance(Recipe recipe, int stepIndex, boolean twoPane) {
-        StepDetailFragment fragment = new StepDetailFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(EXTRA_RECIPE, recipe);
-        args.putInt(EXTRA_STEP_INDEX, stepIndex);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            // two pane fragment is launched
-            mRecipe = getArguments().getParcelable(EXTRA_RECIPE);
-            mStepIndex = getArguments().getInt(EXTRA_STEP_INDEX);
-        } else {
-            // single pane activity is launched
-            if (savedInstanceState == null) {
-                Intent intent = getActivity().getIntent();
-                if (intent != null) {
-                    mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
-                    mStepIndex = intent.getIntExtra(EXTRA_STEP_INDEX, 0);
-                }
-            } else {
-                mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
-                mStepIndex = savedInstanceState.getInt(EXTRA_STEP_INDEX);
+        if (savedInstanceState == null) {
+            Intent intent = getActivity().getIntent();
+            if (intent != null && !mTwoPane) {
+                mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
+                mStepIndex = intent.getIntExtra(EXTRA_STEP_INDEX, 0);
             }
+        } else {
+            mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
+            mStepIndex = savedInstanceState.getInt(EXTRA_STEP_INDEX);
+            mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
         }
     }
 
@@ -105,6 +85,14 @@ public class StepDetailFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(EXTRA_RECIPE, mRecipe);
+        outState.putInt(EXTRA_STEP_INDEX, mStepIndex);
+        outState.putBoolean(EXTRA_TWO_PANE, mTwoPane);
+        super.onSaveInstanceState(outState);
+    }
+
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
     }
@@ -124,10 +112,11 @@ public class StepDetailFragment extends Fragment {
             if (mStepIndex < mRecipe.getSteps().size() - 1) mStepIndex++;
         }
 
-        updateStepDetail();
+        updateUi();
+
     }
 
-    private void updateStepDetail() {
+    private void updateUi() {
         Step step = mRecipe.getSteps().get(mStepIndex);
         mBinding.tvStepDescription.setText(step.getDescription());
     }

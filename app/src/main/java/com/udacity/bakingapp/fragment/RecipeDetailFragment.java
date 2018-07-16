@@ -48,27 +48,9 @@ public class RecipeDetailFragment extends Fragment implements
         // Mandatory empty constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param recipe The recipe the fragment will display
-     * @return A new instance of fragment RecipeDetailFragment.
-     */
-    public static RecipeDetailFragment newInstance(Recipe recipe) {
-        RecipeDetailFragment fragment = new RecipeDetailFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(EXTRA_RECIPE, recipe);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mRecipe = getArguments().getParcelable(EXTRA_RECIPE);
-//        }
 
         if (savedInstanceState == null) {
             Intent intent = getActivity().getIntent();

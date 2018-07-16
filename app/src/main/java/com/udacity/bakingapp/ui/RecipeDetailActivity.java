@@ -15,6 +15,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
     private static final String EXTRA_STEP_INDEX = "stepIndex";
+    private static final String EXTRA_TWO_PANE = "twoPaneBoolean";
 
     private Recipe mRecipe;
     private boolean mTwoPane;
@@ -24,31 +25,44 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        mRecipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
+        if (savedInstanceState == null) {
+            mRecipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
 
-        if (findViewById(R.id.recipe_step_detail_layout) != null) {
-            mTwoPane = true;
-            StepDetailFragment fragment = new StepDetailFragment();
-            fragment.setTwoPane(mTwoPane);
+            if (findViewById(R.id.recipe_step_detail_layout) != null) {
+                mTwoPane = true;
+                StepDetailFragment fragment = new StepDetailFragment();
+                fragment.setRecipe(mRecipe);
+                fragment.setTwoPane(mTwoPane);
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.step_detail_container, fragment)
-                    .commit();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.step_detail_container, fragment)
+                        .commit();
+            } else {
+                mTwoPane = false;
+            }
         } else {
-            mTwoPane = false;
+            mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
+            mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(EXTRA_RECIPE, mRecipe);
+        outState.putBoolean(EXTRA_TWO_PANE, mTwoPane);
     }
 
     @Override
     public void onStepSelected(int stepIndex) {
 
         if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(EXTRA_RECIPE, mRecipe);
-            arguments.putInt(EXTRA_STEP_INDEX, stepIndex);
             StepDetailFragment fragment = new StepDetailFragment();
+            fragment.setRecipe(mRecipe);
+            fragment.setStepIndex(stepIndex);
             fragment.setTwoPane(mTwoPane);
-            fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_detail_container, fragment)
                     .commit();

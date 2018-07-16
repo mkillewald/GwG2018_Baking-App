@@ -82,17 +82,17 @@ public class RecipeListFragment extends Fragment implements
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         if (savedInstanceState == null) {
-//            try {
-//                fetchRecipeList(new URL(RECIPES_URL));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                fetchRecipeList(new URL(RECIPES_URL));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             //for offline testing only!!
-            mRecipes = (ArrayList<Recipe>) RecipeListJson.parse(OFFLINE_JSON);
-
-            mRecipeAdapter.setRecipes(mRecipes);
-            mRecipeAdapter.notifyDataSetChanged();
+//            mRecipes = (ArrayList<Recipe>) RecipeListJson.parse(OFFLINE_JSON);
+//
+//            mRecipeAdapter.setRecipes(mRecipes);
+//            mRecipeAdapter.notifyDataSetChanged();
         } else {
             mRecipes = savedInstanceState.getParcelableArrayList(EXTRA_RECIPE_LIST);
             mRecipeAdapter.setRecipes(mRecipes);

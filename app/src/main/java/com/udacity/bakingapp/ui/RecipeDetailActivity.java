@@ -28,7 +28,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             mRecipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
 
-            if (findViewById(R.id.recipe_step_detail_layout) != null) {
+            if (findViewById(R.id.step_detail_container) != null) {
                 mTwoPane = true;
                 StepDetailFragment fragment = new StepDetailFragment();
                 fragment.setRecipe(mRecipe);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<ScrollView
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
@@ -9,31 +9,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:focusableInTouchMode="true">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cv_recipe_list_item"
+        <TextView
+            android:id="@+id/tv_ingredient_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/card_margin"
-            android:layout_marginRight="@dimen/card_margin"
-            android:layout_marginTop="@dimen/card_margin"
-            android:minHeight="@dimen/recipe_card_min_height">
-
-            <TextView
-                android:id="@+id/tv_ingredient_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </android.support.v7.widget.CardView>
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_step_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
 </layout>

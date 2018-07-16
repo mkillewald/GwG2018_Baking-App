@@ -1,9 +1,11 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.udacity.bakingapp.R;
+import com.udacity.bakingapp.fragment.RecipeListFragment;
 import com.udacity.bakingapp.model.Recipe;
 
 public class MainActivity extends AppCompatActivity implements

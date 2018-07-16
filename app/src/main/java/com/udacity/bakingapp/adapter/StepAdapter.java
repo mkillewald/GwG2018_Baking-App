@@ -1,12 +1,12 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.StepListItemBinding;
 import com.udacity.bakingapp.model.Step;
 
@@ -34,7 +34,7 @@ public class StepAdapter extends
         StepAdapterImageViewHolder(StepListItemBinding stepListItemBinding) {
             super(stepListItemBinding.getRoot());
             mStepItemBinding = stepListItemBinding;
-            mStepItemBinding.tvStepName.setOnClickListener(this);
+            mStepItemBinding.cvStepListItem.setOnClickListener(this);
         }
 
         @Override

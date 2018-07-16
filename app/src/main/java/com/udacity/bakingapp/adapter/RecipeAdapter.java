@@ -1,4 +1,4 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.RecipeListItemBinding;
 import com.udacity.bakingapp.model.Recipe;
 
@@ -32,8 +33,7 @@ public class RecipeAdapter extends
         RecipeAdapterImageViewHolder(RecipeListItemBinding recipeListItemBinding) {
             super(recipeListItemBinding.getRoot());
             mRecipeItemBinding = recipeListItemBinding;
-            mRecipeItemBinding.idText.setOnClickListener(this);
-            mRecipeItemBinding.content.setOnClickListener(this);
+            mRecipeItemBinding.cvRecipeListItem.setOnClickListener(this);
         }
 
         @Override
@@ -60,8 +60,8 @@ public class RecipeAdapter extends
         Recipe recipe = mRecipes.get(position);
 
         holder.mRecipeItemBinding.setRecipe(recipe);
-        holder.mRecipeItemBinding.idText.setText(String.valueOf(recipe.getId()));
-        holder.mRecipeItemBinding.content.setText(recipe.getName());
+        holder.mRecipeItemBinding.tvRecipeName.setText(recipe.getName());
+        holder.mRecipeItemBinding.tvRecipeServings.setText(String.valueOf(recipe.getServings()));
     }
 
     @Override

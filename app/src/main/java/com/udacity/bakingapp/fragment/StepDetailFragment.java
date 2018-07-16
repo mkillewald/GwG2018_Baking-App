@@ -1,4 +1,4 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.fragment;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
@@ -25,6 +25,7 @@ public class StepDetailFragment extends Fragment {
     private FragmentStepDetailBinding mBinding;
     private Recipe mRecipe;
     private int mStepIndex;
+    private boolean mTwoPane;
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -37,7 +38,7 @@ public class StepDetailFragment extends Fragment {
      * @param recipe The recipe the fragment will display
      * @return A new instance of fragment RecipeDetailFragment.
      */
-    public static StepDetailFragment newInstance(Recipe recipe, int stepIndex) {
+    public static StepDetailFragment newInstance(Recipe recipe, int stepIndex, boolean twoPane) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_RECIPE, recipe);
@@ -81,19 +82,25 @@ public class StepDetailFragment extends Fragment {
 
         mBinding.tvStepDescription.setText(mRecipe.getSteps().get(mStepIndex).getDescription());
 
-        mBinding.btnPrevStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickPrevOrNext(view);
-            }
-        });
+        if (mTwoPane) {
+            mBinding.btnNextStep.setVisibility(View.GONE);
+            mBinding.btnPrevStep.setVisibility(View.GONE);
+        } else {
 
-        mBinding.btnNextStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickPrevOrNext(view);
-            }
-        });
+            mBinding.btnPrevStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickPrevOrNext(view);
+                }
+            });
+
+            mBinding.btnNextStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickPrevOrNext(view);
+                }
+            });
+        }
 
         return rootView;
     }
@@ -104,6 +111,10 @@ public class StepDetailFragment extends Fragment {
 
     public void setStepIndex(int stepIndex) {
         mStepIndex = stepIndex;
+    }
+
+    public void setTwoPane(boolean twoPane) {
+        mTwoPane = twoPane;
     }
 
     private void onClickPrevOrNext(View view) {

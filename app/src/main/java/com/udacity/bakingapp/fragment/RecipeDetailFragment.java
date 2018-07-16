@@ -1,4 +1,4 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,15 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.R;
+import com.udacity.bakingapp.adapter.StepAdapter;
 import com.udacity.bakingapp.databinding.FragmentRecipeDetailBinding;
 import com.udacity.bakingapp.model.Ingredient;
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.model.Step;
 
 import java.util.List;
 
@@ -98,7 +98,7 @@ public class RecipeDetailFragment extends Fragment implements
         LinearLayoutManager stepLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvStepList.setLayoutManager(stepLayoutManager);
         binding.rvStepList.setAdapter(stepAdapter);
-//        binding.rvStepList.setNestedScrollingEnabled(false);
+        binding.rvStepList.setNestedScrollingEnabled(false);
 
         return rootView;
     }

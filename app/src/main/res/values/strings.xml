@@ -2,11 +2,11 @@
     <string name="app_name">Baking App</string>
     <string name="title_recipe_detail">Recipe Detail</string>
 
+    <string name="recipe_servings_label">Servings</string>
+
     <!-- Errors -->
     <string name="general_error">An error has occurred.</string>
     <string name="network_error">Network is not responding.</string>
     <string name="implement_OnRecipeCardClickListener"> must implement OnRecipeCardClickListener</string>
     <string name="implement_OnStepClickListener"> must implement OnStepClickListener</string>
-    <string name="implement_OnButtonClickListener"> must implement OnButtonClickListener</string>
-
 </resources>

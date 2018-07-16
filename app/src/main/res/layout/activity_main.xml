@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/recipe_list_fragment"
-        android:name="com.udacity.bakingapp.RecipeListFragment"
+        android:name="com.udacity.bakingapp.fragment.RecipeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -1,9 +1,12 @@
-package com.udacity.bakingapp;
+package com.udacity.bakingapp.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.udacity.bakingapp.R;
+import com.udacity.bakingapp.fragment.RecipeDetailFragment;
+import com.udacity.bakingapp.fragment.StepDetailFragment;
 import com.udacity.bakingapp.model.Recipe;
 
 public class RecipeDetailActivity extends AppCompatActivity implements
@@ -26,6 +29,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         if (findViewById(R.id.recipe_step_detail_layout) != null) {
             mTwoPane = true;
             StepDetailFragment fragment = new StepDetailFragment();
+            fragment.setTwoPane(mTwoPane);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.step_detail_container, fragment)
@@ -43,6 +47,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
             arguments.putParcelable(EXTRA_RECIPE, mRecipe);
             arguments.putInt(EXTRA_STEP_INDEX, stepIndex);
             StepDetailFragment fragment = new StepDetailFragment();
+            fragment.setTwoPane(mTwoPane);
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_detail_container, fragment)

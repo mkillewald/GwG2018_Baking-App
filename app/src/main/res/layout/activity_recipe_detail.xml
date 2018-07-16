@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RecipeDetailActivity">
+    tools:context=".ui.RecipeDetailActivity">
 
     <fragment
         android:id="@+id/recipe_detail_fragment"
-        android:name="com.udacity.bakingapp.RecipeDetailFragment"
+        android:name="com.udacity.bakingapp.fragment.RecipeDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

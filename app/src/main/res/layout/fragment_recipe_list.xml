@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context="com.udacity.bakingapp.RecipeListFragment">
+    tools:context="com.udacity.bakingapp.fragment.RecipeListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recipe_list"

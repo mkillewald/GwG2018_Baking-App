@@ -61,35 +61,32 @@ public class Ingredient implements Parcelable {
      */
     public String formatQuantityAndMeasure(Context context) {
 
-        String formattedQuantity;
+        String outQuantity;
         if (getQuantity() % 1 == 0 ) {
             // display whole number only if no fraction exists
-            formattedQuantity = String.valueOf((int) getQuantity());
+            outQuantity = String.valueOf((int) getQuantity());
         } else {
-            formattedQuantity = String.valueOf(getQuantity());
+            outQuantity = String.valueOf(getQuantity());
         }
 
-        String formattedMeasure;
+        String outMeasure;
         switch(getMeasure()) {
             case JSON_UNIT:
                 // no unit of measure to display
-                formattedMeasure = "";
+                outMeasure = "";
                 break;
             case JSON_TBLSP:
-                formattedMeasure = context.getString(R.string.tbsp_unit) + " ";
+                outMeasure = context.getString(R.string.tbsp_unit);
                 break;
             case JSON_K:
-                formattedMeasure = context.getString(R.string.kg_unit) + " ";
+                outMeasure = context.getString(R.string.kg_unit);
                 break;
             default:
-                formattedMeasure = getMeasure().toLowerCase() + " ";
+                outMeasure = getMeasure().toLowerCase() + " ";
         }
 
-        return String.format(Locale.getDefault(),
-                context.getString(R.string.quantity_measure_ingredient),
-                formattedQuantity,
-                formattedMeasure,
-                getIngredient());
+        String format = context.getString(R.string.quantity_measure_ingredient);
+        return String.format(Locale.getDefault(), format, outQuantity, outMeasure, getIngredient());
     }
 
 }

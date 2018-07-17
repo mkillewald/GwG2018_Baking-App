@@ -11,8 +11,8 @@
     <string name="title_with_step">%s: Step %d</string>
 
     <!-- Measurement Units -->
-    <string name="tbsp_unit">tbsp</string>
-    <string name="kg_unit">kg</string>
+    <string name="tbsp_unit">tbsp\u0020</string>
+    <string name="kg_unit">kg\u0020</string>
 
     <!-- formatted quantity, measure, and ingredient -->
     <string name="quantity_measure_ingredient">%s %s%s</string>

@@ -6,10 +6,20 @@
     <string name="previous_button">Previous</string>
     <string name="next_button">Next</string>
 
+    <!-- Activity title -->
+    <string name="recipe_colon">\u0020Recipe:\u0020</string>
+    <string name="introduction">Introduction</string>
+    <string name="step">Step\u0020</string>
+
+    <!-- Measurement Units -->
+    <string name="tbsp_unit">tbsp</string>
+    <string name="kg_unit">kg</string>
+
     <!-- Errors -->
     <string name="general_error">An error has occurred.</string>
     <string name="network_error">Network is not responding.</string>
     <string name="error_intent_null">Error: Null Intent</string>
-    <string name="implement_OnRecipeCardClickListener"> must implement OnRecipeCardClickListener</string>
-    <string name="implement_OnStepClickListener"> must implement OnStepClickListener</string>
+    <string name="implement_OnRecipeCardClickListener">\u0020must implement OnRecipeCardClickListener</string>
+    <string name="implement_OnStepClickListener">\u0020must implement OnStepClickListener</string>
+    <string name="implement_TitleStringListener">\u0020must implement TitleStringListener</string>
 </resources>

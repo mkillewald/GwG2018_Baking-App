@@ -1,5 +1,7 @@
 package com.udacity.bakingapp.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ public class StepDetailFragment extends Fragment {
     private Recipe mRecipe;
     private int mStepIndex;
     private boolean mTwoPane;
+
+    private TitleStringListener mTitleListener;
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -94,6 +98,20 @@ public class StepDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mTitleListener = (TitleStringListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + getString(R.string.implement_TitleStringListener));
+        }
+    }
+
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
     }
@@ -120,6 +138,15 @@ public class StepDetailFragment extends Fragment {
     private void updateUi() {
         Step step = mRecipe.getSteps().get(mStepIndex);
         mBinding.tvStepDescription.setText(step.getDescription());
+
+        String title = mTitleListener.buildStepTitle(mRecipe.getName(), step.getId());
+
+        Activity parent = getActivity();
+        if (parent != null ) { parent.setTitle(title); }
+    }
+
+    public interface TitleStringListener{
+        String buildStepTitle(String recipeName, int stepNumber);
     }
 }
 

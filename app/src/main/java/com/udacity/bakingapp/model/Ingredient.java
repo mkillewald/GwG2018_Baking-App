@@ -1,13 +1,18 @@
 
 package com.udacity.bakingapp.model;
 
-
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.udacity.bakingapp.R;
+
 public class Ingredient implements Parcelable {
 
-    private static final String NO_UNIT = "UNIT";
+    private static final String JSON_UNIT = "UNIT";
+    private static final String JSON_TBLSP = "TBLSP";
+    private static final String JSON_K = "K";
+
 
     private double quantity;
     private String measure;
@@ -52,7 +57,8 @@ public class Ingredient implements Parcelable {
      * Returns quantity, measure and ingredient
      * @return formatted String with quantity, measure and ingredient
      */
-    public String formatQuantityAndMeasure() {
+    public String formatQuantityAndMeasure(Context context) {
+
         StringBuilder builder = new StringBuilder();
 
         if (getQuantity() % 1 == 0 ) {
@@ -63,9 +69,21 @@ public class Ingredient implements Parcelable {
 
         builder.append(" ");
 
-        if (!getMeasure().equals(NO_UNIT)) {
-            builder.append(getMeasure().toLowerCase());
-            builder.append(" ");
+        switch(getMeasure()) {
+            case JSON_UNIT:
+                // no unit of measure to display, so do nothing
+                break;
+            case JSON_TBLSP:
+                builder.append(context.getString(R.string.tbsp_unit));
+                builder.append(" ");
+                break;
+            case JSON_K:
+                builder.append(context.getString(R.string.kg_unit));
+                builder.append(" ");
+                break;
+            default:
+                builder.append(getMeasure().toLowerCase());
+                builder.append(" ");
         }
 
         builder.append(getIngredient());

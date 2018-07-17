@@ -129,7 +129,7 @@ public class RecipeDetailFragment extends Fragment implements
 
         if (listSize > 0 ) {
             for (int i = 0; i < listSize; i++) {
-                builder.append(ingredients.get(i).formatQuantityAndMeasure());
+                builder.append(ingredients.get(i).formatQuantityAndMeasure(getContext()));
                 if (i != listSize - 1) {
                     builder.append("\n");
                 }

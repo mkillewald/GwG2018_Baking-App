@@ -10,9 +10,11 @@ import com.udacity.bakingapp.fragment.StepDetailFragment;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
 
+import java.util.Locale;
+
 public class RecipeDetailActivity extends AppCompatActivity implements
         RecipeDetailFragment.OnStepClickListener,
-        StepDetailFragment.TitleStringListener {
+        StepDetailFragment.ParentActivityCallback {
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
@@ -20,6 +22,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
     private static final String EXTRA_TWO_PANE = "twoPaneBoolean";
 
     private Recipe mRecipe;
+    private int mStepIndex;
     private boolean mTwoPane;
 
     @Override
@@ -30,11 +33,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             mRecipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
 
-            String title = buildStepTitle(mRecipe.getName(), 0);
-            setTitle(title);
-
             if (findViewById(R.id.step_detail_container) != null) {
                 mTwoPane = true;
+
                 StepDetailFragment fragment = new StepDetailFragment();
                 fragment.setRecipe(mRecipe);
                 fragment.setTwoPane(mTwoPane);
@@ -47,8 +48,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements
             }
         } else {
             mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
+            mStepIndex = savedInstanceState.getInt(EXTRA_STEP_INDEX);
             mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
+        }
 
+        if (mTwoPane) {
+            setTitle(titleWithStep(mRecipe, mStepIndex));
+        } else {
             setTitle(mRecipe.getName());
         }
     }
@@ -58,21 +64,20 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(EXTRA_RECIPE, mRecipe);
+        outState.putInt(EXTRA_STEP_INDEX, mStepIndex);
         outState.putBoolean(EXTRA_TWO_PANE, mTwoPane);
     }
 
     @Override
     public void onStepSelected(int stepIndex) {
+        mStepIndex = stepIndex;
 
         if (mTwoPane) {
-
-            Step step = mRecipe.getSteps().get(stepIndex);
-            String title = buildStepTitle(mRecipe.getName(), step.getId());
-            setTitle(title);
+            setTitle(titleWithStep(mRecipe, mStepIndex));
 
             StepDetailFragment fragment = new StepDetailFragment();
             fragment.setRecipe(mRecipe);
-            fragment.setStepIndex(stepIndex);
+            fragment.setStepIndex(mStepIndex);
             fragment.setTwoPane(mTwoPane);
 
             getSupportFragmentManager().beginTransaction()
@@ -81,24 +86,27 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         } else {
             Intent intent = new Intent(this, StepDetailActivity.class);
             intent.putExtra(EXTRA_RECIPE, mRecipe);
-            intent.putExtra(EXTRA_STEP_INDEX, stepIndex);
+            intent.putExtra(EXTRA_STEP_INDEX, mStepIndex);
 
             startActivity(intent);
         }
     }
 
-    public String buildStepTitle(String recipeName, int stepNumber) {
-        StringBuilder titleBuilder = new StringBuilder();
-        titleBuilder.append(recipeName);
-        titleBuilder.append(getString(R.string.recipe_colon));
+    public String titleWithStep(Recipe recipe, int index) {
+        Step step = recipe.getSteps().get(index);
 
-        if (stepNumber == 0) {
-            titleBuilder.append(getString(R.string.introduction));
+        if (index == 0) {
+            return String.format(Locale.getDefault(),
+                    getString(R.string.title_step_0), recipe.getName(),
+                    step.getShortDescription());
         } else {
-            titleBuilder.append(getString(R.string.step));
-            titleBuilder.append(stepNumber);
+            return String.format(Locale.getDefault(),
+                    getString(R.string.title_with_step), recipe.getName(), step.getId());
         }
+    }
 
-        return titleBuilder.toString();
+    @Override
+    public void setStepIndex(int index) {
+        mStepIndex = index;
     }
 }

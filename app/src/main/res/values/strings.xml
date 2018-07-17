@@ -7,13 +7,15 @@
     <string name="next_button">Next</string>
 
     <!-- Activity title -->
-    <string name="recipe_colon">\u0020Recipe:\u0020</string>
-    <string name="introduction">Introduction</string>
-    <string name="step">Step\u0020</string>
+    <string name="title_step_0">%s: %s</string>
+    <string name="title_with_step">%s: Step %d</string>
 
     <!-- Measurement Units -->
     <string name="tbsp_unit">tbsp</string>
     <string name="kg_unit">kg</string>
+
+    <!-- formatted quantity, measure, and ingredient -->
+    <string name="quantity_measure_ingredient">%s %s%s</string>
 
     <!-- Errors -->
     <string name="general_error">An error has occurred.</string>

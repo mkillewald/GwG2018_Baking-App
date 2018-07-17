@@ -7,6 +7,8 @@ import android.os.Parcelable;
 
 import com.udacity.bakingapp.R;
 
+import java.util.Locale;
+
 public class Ingredient implements Parcelable {
 
     private static final String JSON_UNIT = "UNIT";
@@ -59,36 +61,35 @@ public class Ingredient implements Parcelable {
      */
     public String formatQuantityAndMeasure(Context context) {
 
-        StringBuilder builder = new StringBuilder();
-
+        String formattedQuantity;
         if (getQuantity() % 1 == 0 ) {
-            builder.append((int) getQuantity());
+            // display whole number only if no fraction exists
+            formattedQuantity = String.valueOf((int) getQuantity());
         } else {
-            builder.append(getQuantity());
+            formattedQuantity = String.valueOf(getQuantity());
         }
 
-        builder.append(" ");
-
+        String formattedMeasure;
         switch(getMeasure()) {
             case JSON_UNIT:
-                // no unit of measure to display, so do nothing
+                // no unit of measure to display
+                formattedMeasure = "";
                 break;
             case JSON_TBLSP:
-                builder.append(context.getString(R.string.tbsp_unit));
-                builder.append(" ");
+                formattedMeasure = context.getString(R.string.tbsp_unit) + " ";
                 break;
             case JSON_K:
-                builder.append(context.getString(R.string.kg_unit));
-                builder.append(" ");
+                formattedMeasure = context.getString(R.string.kg_unit) + " ";
                 break;
             default:
-                builder.append(getMeasure().toLowerCase());
-                builder.append(" ");
+                formattedMeasure = getMeasure().toLowerCase() + " ";
         }
 
-        builder.append(getIngredient());
-
-        return builder.toString();
+        return String.format(Locale.getDefault(),
+                context.getString(R.string.quantity_measure_ingredient),
+                formattedQuantity,
+                formattedMeasure,
+                getIngredient());
     }
 
 }

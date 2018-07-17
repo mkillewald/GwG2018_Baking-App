@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +30,7 @@ public class StepDetailFragment extends Fragment {
     private int mStepIndex;
     private boolean mTwoPane;
 
-    private TitleStringListener mTitleListener;
+    private ParentActivityCallback mCallback;
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -65,8 +63,6 @@ public class StepDetailFragment extends Fragment {
 
         final View rootView = mBinding.getRoot();
 
-        mBinding.tvStepDescription.setText(mRecipe.getSteps().get(mStepIndex).getDescription());
-
         if (mTwoPane) {
             mBinding.btnNextStep.setVisibility(View.GONE);
             mBinding.btnPrevStep.setVisibility(View.GONE);
@@ -87,15 +83,18 @@ public class StepDetailFragment extends Fragment {
             });
         }
 
+        updateUi();
+
         return rootView;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
         outState.putParcelable(EXTRA_RECIPE, mRecipe);
         outState.putInt(EXTRA_STEP_INDEX, mStepIndex);
         outState.putBoolean(EXTRA_TWO_PANE, mTwoPane);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -105,11 +104,17 @@ public class StepDetailFragment extends Fragment {
         // This makes sure that the host activity has implemented the callback interface
         // If not, it throws an exception
         try {
-            mTitleListener = (TitleStringListener) context;
+            mCallback = (ParentActivityCallback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + getString(R.string.implement_TitleStringListener));
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
     }
 
     public void setRecipe(Recipe recipe) {
@@ -131,6 +136,8 @@ public class StepDetailFragment extends Fragment {
             if (mStepIndex < mRecipe.getSteps().size() - 1) mStepIndex++;
         }
 
+        mCallback.setStepIndex(mStepIndex);
+
         updateUi();
 
     }
@@ -139,14 +146,33 @@ public class StepDetailFragment extends Fragment {
         Step step = mRecipe.getSteps().get(mStepIndex);
         mBinding.tvStepDescription.setText(step.getDescription());
 
-        String title = mTitleListener.buildStepTitle(mRecipe.getName(), step.getId());
+        if (!mTwoPane) {
+            String title = mCallback.titleWithStep(mRecipe, mStepIndex);
 
-        Activity parent = getActivity();
-        if (parent != null ) { parent.setTitle(title); }
+            Activity parent = getActivity();
+            if (parent != null ) { parent.setTitle(title); }
+
+            if (mStepIndex == 0) {
+                mBinding.btnPrevStep.setClickable(false);
+                mBinding.btnPrevStep.setVisibility(View.INVISIBLE);
+            } else {
+                mBinding.btnPrevStep.setClickable(true);
+                mBinding.btnPrevStep.setVisibility(View.VISIBLE);
+            }
+
+            if (mStepIndex == mRecipe.getSteps().size() - 1) {
+                mBinding.btnNextStep.setClickable(false);
+                mBinding.btnNextStep.setVisibility(View.INVISIBLE);
+            } else {
+                mBinding.btnNextStep.setClickable(true);
+                mBinding.btnNextStep.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
-    public interface TitleStringListener{
-        String buildStepTitle(String recipeName, int stepNumber);
+    public interface ParentActivityCallback {
+        String titleWithStep(Recipe recipe, int index);
+        void setStepIndex(int index);
     }
 }
 

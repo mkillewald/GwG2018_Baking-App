@@ -87,8 +87,9 @@ public class RecipeDetailFragment extends Fragment implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(EXTRA_RECIPE, mRecipe);
         super.onSaveInstanceState(outState);
+
+        outState.putParcelable(EXTRA_RECIPE, mRecipe);
     }
 
     @Override

@@ -8,13 +8,9 @@ import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.fragment.RecipeDetailFragment;
 import com.udacity.bakingapp.fragment.StepDetailFragment;
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.model.Step;
-
-import java.util.Locale;
 
 public class RecipeDetailActivity extends AppCompatActivity implements
-        RecipeDetailFragment.OnStepClickListener,
-        StepDetailFragment.ParentActivityCallback {
+        RecipeDetailFragment.OnStepClickListener {
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
@@ -52,11 +48,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
             mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
         }
 
-        if (mTwoPane) {
-            setTitle(titleWithStep(mRecipe, mStepIndex));
-        } else {
-            setTitle(mRecipe.getName());
-        }
+        if (!mTwoPane) { setTitle(mRecipe.getName()); }
     }
 
     @Override
@@ -73,8 +65,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         mStepIndex = stepIndex;
 
         if (mTwoPane) {
-            setTitle(titleWithStep(mRecipe, mStepIndex));
-
             StepDetailFragment fragment = new StepDetailFragment();
             fragment.setRecipe(mRecipe);
             fragment.setStepIndex(mStepIndex);
@@ -90,21 +80,5 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
             startActivity(intent);
         }
-    }
-
-    public String titleWithStep(Recipe recipe, int index) {
-        Step step = recipe.getSteps().get(index);
-
-        if (index == 0) {
-            return String.format(Locale.getDefault(),
-                    getString(R.string.title_step_0), recipe.getName(),
-                    step.getShortDescription());
-        } else {
-            return String.format(Locale.getDefault(),
-                    getString(R.string.title_with_step), recipe.getName(), step.getId());
-        }
-    }
-
-    public void setStepIndex(int index) {
     }
 }

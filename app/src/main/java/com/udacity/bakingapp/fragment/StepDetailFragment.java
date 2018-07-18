@@ -1,7 +1,6 @@
 package com.udacity.bakingapp.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
@@ -32,8 +31,10 @@ import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
+import com.udacity.bakingapp.ui.RecipeDetailActivity;
 import com.udacity.bakingapp.ui.StepDetailActivity;
 
+import java.util.Locale;
 
 public class StepDetailFragment extends Fragment {
 
@@ -50,13 +51,6 @@ public class StepDetailFragment extends Fragment {
     private Recipe mRecipe;
     private int mStepIndex;
     private boolean mTwoPane;
-
-    private ParentActivityCallback mCallback;
-
-    public interface ParentActivityCallback {
-        String titleWithStep(Recipe recipe, int index);
-        void setStepIndex(int index);
-    }
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -78,6 +72,8 @@ public class StepDetailFragment extends Fragment {
             mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
             mExoPlayerPosition = savedInstanceState.getLong(EXTRA_EXO_PLAYER_POSITION);
         }
+
+        setTitleWithStep(mRecipe, mStepIndex);
     }
 
     @Nullable
@@ -181,26 +177,6 @@ public class StepDetailFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // This makes sure that the host activity has implemented the callback interface
-        // If not, it throws an exception
-        try {
-            mCallback = (ParentActivityCallback) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + getString(R.string.implement_TitleStringListener));
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallback = null;
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23 && mExoPlayer == null) {
@@ -258,11 +234,33 @@ public class StepDetailFragment extends Fragment {
             if (mStepIndex < mRecipe.getSteps().size() - 1) mStepIndex++;
         }
 
-        mCallback.setStepIndex(mStepIndex);
-
         releasePlayer();
         mExoPlayerPosition = 0;
         updateUi();
+    }
+
+    public void setTitleWithStep(Recipe recipe, int index) {
+        Step step = recipe.getSteps().get(index);
+        String title;
+
+        if (index == 0) {
+            title = String.format(Locale.getDefault(),
+                    getString(R.string.title_step_0), recipe.getName(),
+                    step.getShortDescription());
+        } else {
+            title = String.format(Locale.getDefault(),
+                    getString(R.string.title_with_step), recipe.getName(), step.getId());
+        }
+
+        Activity hostActivity = null;
+
+        if (getActivity() instanceof StepDetailActivity) {
+            hostActivity = (StepDetailActivity) getActivity();
+        } else if (getActivity() instanceof RecipeDetailActivity) {
+            hostActivity = (RecipeDetailActivity) getActivity();
+        }
+
+        if (hostActivity != null) { hostActivity.setTitle(title); }
     }
 
     private void updateUi() {
@@ -292,18 +290,12 @@ public class StepDetailFragment extends Fragment {
             // no video or thumbnail URL exists, show placeholder in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
-            Picasso.with(getContext())
-                    .load("http:///")
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .into(mBinding.ivStepThumbnail);
+            mBinding.ivStepThumbnail.setImageResource(R.drawable.ic_launcher_foreground);
         }
 
+        setTitleWithStep(mRecipe, mStepIndex);
+
         if (!mTwoPane) {
-            String title = mCallback.titleWithStep(mRecipe, mStepIndex);
-
-            Activity parent = getActivity();
-            if (parent != null ) { parent.setTitle(title); }
-
             showPrevAndNextButtons();
         }
     }
@@ -352,8 +344,6 @@ public class StepDetailFragment extends Fragment {
         mExoPlayer.release();
         mExoPlayer = null;
     }
-
-
 }
 
 

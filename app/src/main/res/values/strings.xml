@@ -23,5 +23,4 @@
     <string name="error_intent_null">Error: Null Intent</string>
     <string name="implement_OnRecipeCardClickListener">\u0020must implement OnRecipeCardClickListener</string>
     <string name="implement_OnStepClickListener">\u0020must implement OnStepClickListener</string>
-    <string name="implement_TitleStringListener">\u0020must implement TitleStringListener</string>
 </resources>

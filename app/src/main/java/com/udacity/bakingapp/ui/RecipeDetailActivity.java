@@ -105,8 +105,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
     public void setStepIndex(int index) {
-        mStepIndex = index;
     }
 }

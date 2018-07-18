@@ -32,6 +32,7 @@ import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
+import com.udacity.bakingapp.ui.StepDetailActivity;
 
 
 public class StepDetailFragment extends Fragment {
@@ -109,30 +110,6 @@ public class StepDetailFragment extends Fragment {
                     onClickPrevOrNext(view);
                 }
             });
-
-            if (getResources().getConfiguration().orientation ==
-                    Configuration.ORIENTATION_LANDSCAPE) {
-                mBinding.tvStepDescription.setVisibility(View.INVISIBLE);
-                mBinding.btnPrevStep.setVisibility(View.INVISIBLE);
-                mBinding.btnNextStep.setVisibility(View.INVISIBLE);
-
-                ConstraintLayout.LayoutParams params =
-                        (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
-                params.width=params.MATCH_PARENT;
-                params.height=params.MATCH_PARENT;
-                mBinding.exoPlayerView.setLayoutParams(params);
-
-            } else if (getResources().getConfiguration().orientation ==
-                    Configuration.ORIENTATION_PORTRAIT) {
-                mBinding.tvStepDescription.setVisibility(View.VISIBLE);
-                showPrevAndNextButtons();
-
-                ConstraintLayout.LayoutParams params =
-                        (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
-                params.width=params.MATCH_PARENT;
-                params.height=605;
-                mBinding.exoPlayerView.setLayoutParams(params);
-            }
         }
 
         return rootView;
@@ -150,6 +127,56 @@ public class StepDetailFragment extends Fragment {
             outState.putLong(EXTRA_EXO_PLAYER_POSITION, mExoPlayer.getCurrentPosition());
         } else {
             outState.putLong(EXTRA_EXO_PLAYER_POSITION, mExoPlayerPosition);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        StepDetailActivity hostActivity = (StepDetailActivity) getActivity();
+
+        if (!mTwoPane && getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE) {
+            mBinding.tvStepDescription.setVisibility(View.INVISIBLE);
+            mBinding.btnPrevStep.setVisibility(View.INVISIBLE);
+            mBinding.btnNextStep.setVisibility(View.INVISIBLE);
+
+            ConstraintLayout.LayoutParams params =
+                    (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
+            params.width=params.MATCH_PARENT;
+            params.height=params.MATCH_PARENT;
+            mBinding.exoPlayerView.setLayoutParams(params);
+
+            // hide status bar
+            hostActivity.getWindow().getDecorView()
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                            View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+            // hide action bar
+            if (hostActivity.getSupportActionBar() != null) {
+                hostActivity.getSupportActionBar().hide();
+            }
+
+        } else if (!mTwoPane && getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_PORTRAIT) {
+            mBinding.tvStepDescription.setVisibility(View.VISIBLE);
+            showPrevAndNextButtons();
+
+            ConstraintLayout.LayoutParams params =
+                    (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
+            params.width=params.MATCH_PARENT;
+            params.height=605;
+            mBinding.exoPlayerView.setLayoutParams(params);
+
+            // show status bar
+            hostActivity.getWindow().getDecorView()
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+            // show action bar
+            if(hostActivity.getSupportActionBar()!=null) {
+                hostActivity.getSupportActionBar().show();
+            }
         }
     }
 

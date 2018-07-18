@@ -1,11 +1,9 @@
 package com.udacity.bakingapp.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.fragment.StepDetailFragment;
@@ -48,24 +46,6 @@ public class StepDetailActivity extends AppCompatActivity implements
         }
 
         setTitle(titleWithStep(mRecipe, mStepIndex));
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // hide status bar
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
-
-            // hide action bar
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().hide();
-            }
-        } else {
-            // show status bar
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-            // show action bar
-            if(getSupportActionBar()!=null) {
-                getSupportActionBar().show();
-            }
-        }
     }
 
     @Override

@@ -18,34 +18,41 @@
         <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_margin"
                 android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_kisspng_cupcake_frosting"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:src="@drawable/ic_kisspng_cupcake_frosting"/>
 
             <TextView
                 android:id="@+id/tv_recipe_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
+                android:layout_marginLeft="@dimen/text_margin"
+                app:layout_constraintLeft_toRightOf="@id/iv_kisspng_cupcake_frosting"
+                app:layout_constraintTop_toTopOf="parent"
                 android:textAppearance="?attr/textAppearanceListItem" />
+
+            <TextView
+                android:id="@+id/tv_number_of_steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
+                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name" />
 
             <TextView
                 android:id="@+id/tv_recipe_servings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name"
-                app:layout_constraintStart_toStartOf="@id/tv_recipe_name" />
-
-            <TextView
-                android:id="@+id/tv_recipe_servings_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-                app:layout_constraintLeft_toRightOf="@id/tv_recipe_servings"
-                app:layout_constraintStart_toEndOf="@id/tv_recipe_servings"
-                android:text="@string/recipe_servings_label"/>
-
+                app:layout_constraintTop_toBottomOf="@id/tv_number_of_steps"
+                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

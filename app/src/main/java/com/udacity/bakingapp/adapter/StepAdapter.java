@@ -61,8 +61,14 @@ public class StepAdapter extends
         Step step = mSteps.get(position);
 
         holder.mStepItemBinding.setStep(step);
-        holder.mStepItemBinding.tvStepId.setText(String.valueOf(step.getId()));
-        holder.mStepItemBinding.tvStepName.setText(step.getShortDescription());
+
+        String description = null;
+        if (step.getId() == 0) {
+            description = step.getShortDescription();
+        } else {
+            description = step.getId() + ". " + step.getShortDescription();
+        }
+        holder.mStepItemBinding.tvStepName.setText(description);
     }
 
     @Override

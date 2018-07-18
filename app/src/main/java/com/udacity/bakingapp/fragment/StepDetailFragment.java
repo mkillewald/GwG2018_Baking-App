@@ -245,7 +245,6 @@ public class StepDetailFragment extends Fragment {
 
     private void updateUi() {
         Step step = mRecipe.getSteps().get(mStepIndex);
-        mBinding.tvStepDescription.setText(step.getDescription());
 
         if (!step.getVideoURL().equals("")) {
             // if step video URL exists load into player
@@ -272,11 +271,18 @@ public class StepDetailFragment extends Fragment {
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
         }
 
-        setTitleWithStep(mRecipe, mStepIndex);
-
-        if (!mTwoPane) {
+        if (mTwoPane) {
+            mBinding.tvStepDescriptionTwoPane.setText(step.getDescription());
+            mBinding.tvStepDescriptionTwoPane.setVisibility(View.VISIBLE);
+            mBinding.tvStepDescription.setVisibility(View.GONE);
+        } else {
+            mBinding.tvStepDescription.setText(step.getDescription());
+            mBinding.tvStepDescription.setVisibility(View.VISIBLE);
+            mBinding.tvStepDescriptionTwoPane.setVisibility(View.GONE);
             showPrevAndNextButtons();
         }
+
+        setTitleWithStep(mRecipe, mStepIndex);
     }
 
     private void showPrevAndNextButtons() {

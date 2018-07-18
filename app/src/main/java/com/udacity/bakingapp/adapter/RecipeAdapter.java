@@ -1,5 +1,6 @@
 package com.udacity.bakingapp.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,29 +12,32 @@ import com.udacity.bakingapp.databinding.RecipeListItemBinding;
 import com.udacity.bakingapp.model.Recipe;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RecipeAdapter extends
         RecyclerView.Adapter<RecipeAdapter.RecipeAdapterImageViewHolder> {
 
     private List<Recipe> mRecipes;
+    private Context mContext;
     private final RecipeAdapterOnClickHandler mClickHandler;
 
     public interface RecipeAdapterOnClickHandler {
         void onClick(Recipe recipe);
     }
 
-    public RecipeAdapter(RecipeAdapterOnClickHandler clickHandler) {
+    public RecipeAdapter(Context context, RecipeAdapterOnClickHandler clickHandler) {
+        mContext = context;
         mClickHandler = clickHandler;
     }
 
     public class RecipeAdapterImageViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
-        final RecipeListItemBinding mRecipeItemBinding;
+        final RecipeListItemBinding mBinding;
 
         RecipeAdapterImageViewHolder(RecipeListItemBinding recipeListItemBinding) {
             super(recipeListItemBinding.getRoot());
-            mRecipeItemBinding = recipeListItemBinding;
-            mRecipeItemBinding.cvRecipeListItem.setOnClickListener(this);
+            mBinding = recipeListItemBinding;
+            mBinding.cvRecipeListItem.setOnClickListener(this);
         }
 
         @Override
@@ -58,10 +62,17 @@ public class RecipeAdapter extends
     @Override
     public void onBindViewHolder(RecipeAdapterImageViewHolder holder, int position) {
         Recipe recipe = mRecipes.get(position);
+        int numberOfSteps = recipe.getSteps().size();
+        int numberOfIngredients = recipe.getIngredients().size();
 
-        holder.mRecipeItemBinding.setRecipe(recipe);
-        holder.mRecipeItemBinding.tvRecipeName.setText(recipe.getName());
-        holder.mRecipeItemBinding.tvRecipeServings.setText(String.valueOf(recipe.getServings()));
+        holder.mBinding.setRecipe(recipe);
+        holder.mBinding.tvRecipeName.setText(recipe.getName());
+        String stepsWithIngredients = String.format(Locale.getDefault(),
+                mContext.getString(R.string.recipe_steps), numberOfSteps, numberOfIngredients);
+        holder.mBinding.tvNumberOfSteps.setText(stepsWithIngredients);
+        String numberOfServings = String.format(Locale.getDefault(),
+                mContext.getString(R.string.recipe_servings), recipe.getServings());
+        holder.mBinding.tvRecipeServings.setText(numberOfServings);
     }
 
     @Override

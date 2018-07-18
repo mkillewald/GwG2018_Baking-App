@@ -77,7 +77,7 @@ public class RecipeListFragment extends Fragment implements
         int numOfColumns = (int) (dpWidth / 300);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), numOfColumns);
 
-        mRecipeAdapter = new RecipeAdapter(this);
+        mRecipeAdapter = new RecipeAdapter(getContext(), this);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setAdapter(mRecipeAdapter);
 

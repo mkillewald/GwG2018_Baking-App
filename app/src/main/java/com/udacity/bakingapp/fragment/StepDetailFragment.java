@@ -177,26 +177,6 @@ public class StepDetailFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (Util.SDK_INT > 23 && mExoPlayer == null) {
-            Step step = mRecipe.getSteps().get(mStepIndex);
-            initializePlayer(Uri.parse(step.getVideoURL()));
-            updateUi();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (Util.SDK_INT <= 23 && mExoPlayer == null) {
-            Step step = mRecipe.getSteps().get(mStepIndex);
-            initializePlayer(Uri.parse(step.getVideoURL()));
-            updateUi();
-        }
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         releasePlayer();
@@ -269,28 +249,27 @@ public class StepDetailFragment extends Fragment {
 
         if (!step.getVideoURL().equals("")) {
             // if step video URL exists load into player
+            initializePlayer(Uri.parse(step.getVideoURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-            initializePlayer(Uri.parse(step.getVideoURL()));
         } else if (step.getThumbnailURL().endsWith(".mp4")) {
             // since no video URL, check if thumbnailURL ends with .mp4
             // if it does, load that URL into player instead
+            initializePlayer(Uri.parse(step.getThumbnailURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-            initializePlayer(Uri.parse(step.getThumbnailURL()));
         } else if (!step.getThumbnailURL().equals("")) {
             // at this point, if the thumbnail URL exists, display it in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
             Picasso.with(getContext())
                     .load(step.getThumbnailURL())
-                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.placeholder_image)
                     .into(mBinding.ivStepThumbnail);
         } else {
             // no video or thumbnail URL exists, show placeholder in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
-            mBinding.ivStepThumbnail.setImageResource(R.drawable.ic_launcher_foreground);
         }
 
         setTitleWithStep(mRecipe, mStepIndex);

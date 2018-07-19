@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context=".fragment.RecipeDetailFragment">
 
     <LinearLayout
@@ -16,6 +17,13 @@
         <TextView
             android:id="@+id/tv_ingredient_list"
             android:layout_margin="@dimen/text_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_servings"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

@@ -62,7 +62,7 @@ public class RecipeAdapter extends
     @Override
     public void onBindViewHolder(RecipeAdapterImageViewHolder holder, int position) {
         Recipe recipe = mRecipes.get(position);
-        int numberOfSteps = recipe.getSteps().size();
+        int numberOfSteps = recipe.getSteps().size() - 1;
         int numberOfIngredients = recipe.getIngredients().size();
 
         holder.mBinding.setRecipe(recipe);

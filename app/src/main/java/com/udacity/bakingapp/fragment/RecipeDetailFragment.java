@@ -19,6 +19,7 @@ import com.udacity.bakingapp.model.Ingredient;
 import com.udacity.bakingapp.model.Recipe;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RecipeDetailFragment extends Fragment implements
         StepAdapter.StepAdapterOnClickHandler {
@@ -73,6 +74,10 @@ public class RecipeDetailFragment extends Fragment implements
         final View rootView = binding.getRoot();
 
         binding.tvIngredientList.setText(formatIngredientList());
+
+        String numberOfServings = String.format(Locale.getDefault(),
+                getString(R.string.recipe_servings), mRecipe.getServings());
+        binding.tvServings.setText(numberOfServings);
 
         StepAdapter stepAdapter = new StepAdapter(this);
         stepAdapter.setSteps(mRecipe.getSteps());

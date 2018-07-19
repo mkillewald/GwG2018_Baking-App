@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -95,6 +93,7 @@ public class StepDetailFragment extends Fragment {
         } else {
             // invoke fullscreen if view is created in Landscape mode
             checkOrientationForFullscreen();
+            rootView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
 
             mBinding.btnPrevStep.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -266,14 +265,10 @@ public class StepDetailFragment extends Fragment {
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
         }
 
-        if (mTwoPane) {
-            mBinding.tvStepDescriptionTwoPane.setText(step.getDescription());
-            mBinding.tvStepDescriptionTwoPane.setVisibility(View.VISIBLE);
-            mBinding.tvStepDescription.setVisibility(View.GONE);
-        } else {
-            mBinding.tvStepDescription.setText(step.getDescription());
-            mBinding.tvStepDescription.setVisibility(View.VISIBLE);
-            mBinding.tvStepDescriptionTwoPane.setVisibility(View.GONE);
+        mBinding.tvStepDescription.setText(step.getDescription());
+
+        if (!mTwoPane) {
+
             showPrevAndNextButtons();
         }
 

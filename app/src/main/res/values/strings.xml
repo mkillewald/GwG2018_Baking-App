@@ -21,7 +21,9 @@
 
     <!-- Errors -->
     <string name="general_error">An error has occurred.</string>
-    <string name="network_error">Network is not responding.</string>
+    <string name="network_error">Network is not responding, or is unavailable.</string>
+    <string name="check_network_settings">Please verify your connection settings and check that you are connected to the Internet.</string>
+
     <string name="error_intent_null">Error: Null Intent</string>
     <string name="implement_OnRecipeCardClickListener">\u0020must implement OnRecipeCardClickListener</string>
     <string name="implement_OnStepClickListener">\u0020must implement OnStepClickListener</string>

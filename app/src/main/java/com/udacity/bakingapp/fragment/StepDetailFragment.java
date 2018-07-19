@@ -1,14 +1,18 @@
 package com.udacity.bakingapp.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.net.Network;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +36,7 @@ import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
 import com.udacity.bakingapp.activity.RecipeDetailActivity;
 import com.udacity.bakingapp.activity.StepDetailActivity;
+import com.udacity.bakingapp.utility.NetworkUtils;
 
 import java.util.Locale;
 
@@ -240,18 +245,24 @@ public class StepDetailFragment extends Fragment {
     private void updateUi() {
         Step step = mRecipe.getSteps().get(mStepIndex);
 
-        if (!step.getVideoURL().equals("")) {
+        boolean networkIsUp = NetworkUtils.isNetworkAvailable(getContext());
+
+        if (!networkIsUp) {
+            NetworkUtils.displayNetworkDownAlert(getContext());
+        }
+
+        if (!step.getVideoURL().isEmpty() && networkIsUp) {
             // if step video URL exists load into player
             initializePlayer(Uri.parse(step.getVideoURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-        } else if (step.getThumbnailURL().endsWith(".mp4")) {
+        } else if (step.getThumbnailURL().endsWith(".mp4") && networkIsUp) {
             // since no video URL, check if thumbnailURL ends with .mp4
             // if it does, load that URL into player instead
             initializePlayer(Uri.parse(step.getThumbnailURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-        } else if (!step.getThumbnailURL().equals("")) {
+        } else if (!step.getThumbnailURL().isEmpty()) {
             // at this point, if the thumbnail URL exists, display it in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
@@ -260,7 +271,8 @@ public class StepDetailFragment extends Fragment {
                     .placeholder(R.drawable.placeholder_image)
                     .into(mBinding.ivStepThumbnail);
         } else {
-            // no video or thumbnail URL exists, show placeholder in the ImageView
+            // no video or thumbnail URL exists, or the network is down,
+            // so show placeholder in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
         }

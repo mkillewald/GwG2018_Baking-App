@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.RecipeListItemBinding;
 import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.model.Step;
 
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +68,16 @@ public class RecipeAdapter extends
         int numberOfIngredients = recipe.getIngredients().size();
 
         holder.mBinding.setRecipe(recipe);
+
+        Step step0 = recipe.getSteps().get(0);
+
+        if (!step0.getThumbnailURL().isEmpty()) {
+            Picasso.with(holder.itemView.getContext())
+                    .load(step0.getThumbnailURL())
+                    .placeholder(R.drawable.ic_kisspng_cupcake_frosting)
+                    .into(holder.mBinding.ivRecipeThumbnail);
+        }
+
         holder.mBinding.tvRecipeName.setText(recipe.getName());
         String stepsWithIngredients = String.format(Locale.getDefault(),
                 mContext.getString(R.string.recipe_steps), numberOfSteps, numberOfIngredients);

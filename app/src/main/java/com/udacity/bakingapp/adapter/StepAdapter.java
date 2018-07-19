@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.StepListItemBinding;
 import com.udacity.bakingapp.model.Step;
@@ -29,12 +30,12 @@ public class StepAdapter extends
 
     public class StepAdapterImageViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
-        final StepListItemBinding mStepItemBinding;
+        final StepListItemBinding mBinding;
 
         StepAdapterImageViewHolder(StepListItemBinding stepListItemBinding) {
             super(stepListItemBinding.getRoot());
-            mStepItemBinding = stepListItemBinding;
-            mStepItemBinding.cvStepListItem.setOnClickListener(this);
+            mBinding = stepListItemBinding;
+            mBinding.cvStepListItem.setOnClickListener(this);
         }
 
         @Override
@@ -60,7 +61,14 @@ public class StepAdapter extends
     public void onBindViewHolder(StepAdapterImageViewHolder holder, int position) {
         Step step = mSteps.get(position);
 
-        holder.mStepItemBinding.setStep(step);
+        holder.mBinding.setStep(step);
+
+        if (!step.getThumbnailURL().isEmpty()) {
+            Picasso.with(holder.itemView.getContext())
+                    .load(step.getThumbnailURL())
+                    .placeholder(R.drawable.ic_spoon)
+                    .into(holder.mBinding.ivStepThumbnail);
+        }
 
         String description = null;
         if (step.getId() == 0) {
@@ -68,7 +76,7 @@ public class StepAdapter extends
         } else {
             description = step.getId() + ". " + step.getShortDescription();
         }
-        holder.mStepItemBinding.tvStepName.setText(description);
+        holder.mBinding.tvStepName.setText(description);
     }
 
     @Override

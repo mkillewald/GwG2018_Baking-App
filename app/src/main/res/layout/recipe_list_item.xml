@@ -23,7 +23,7 @@
                 android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/iv_kisspng_cupcake_frosting"
+                android:id="@+id/iv_recipe_thumbnail"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="fitCenter"
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/text_margin"
-                app:layout_constraintLeft_toRightOf="@id/iv_kisspng_cupcake_frosting"
+                app:layout_constraintLeft_toRightOf="@id/iv_recipe_thumbnail"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textAppearance="?attr/textAppearanceListItem" />
 

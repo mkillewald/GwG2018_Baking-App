@@ -1,10 +1,13 @@
 package com.udacity.bakingapp.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.adapter.RecipeAdapter;
 import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.utility.NetworkUtils;
 import com.udacity.bakingapp.utility.RecipeListJson;
 
 import java.io.IOException;
@@ -82,10 +86,14 @@ public class RecipeListFragment extends Fragment implements
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         if (savedInstanceState == null) {
-            try {
-                fetchRecipeList(new URL(RECIPES_URL));
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (NetworkUtils.isNetworkAvailable(getContext())) {
+                try {
+                    fetchRecipeList(NetworkUtils.getUrlfromString(RECIPES_URL));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                NetworkUtils.displayNetworkDownAlert(getContext());
             }
         } else {
             mRecipes = savedInstanceState.getParcelableArrayList(EXTRA_RECIPE_LIST);
@@ -145,8 +153,7 @@ public class RecipeListFragment extends Fragment implements
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getContext(),
-                                R.string.network_error, Toast.LENGTH_LONG).show();
+                        NetworkUtils.displayNetworkDownAlert(getContext());
                     }
                 });
             }

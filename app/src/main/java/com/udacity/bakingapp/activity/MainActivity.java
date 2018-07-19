@@ -8,9 +8,7 @@ import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.fragment.RecipeListFragment;
 import com.udacity.bakingapp.model.Recipe;
 
-// TODO check for network access and display error if no network
 // TODO add espresso UI tests
-// TODO add calls for step thumbnail images to recipe list and step list
 // TODO add comments and javadocs
 // TODO run Lint
 

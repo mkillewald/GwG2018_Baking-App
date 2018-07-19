@@ -1,7 +1,9 @@
 package com.udacity.bakingapp.fragment;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.GsonBuilder;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.adapter.StepAdapter;
 import com.udacity.bakingapp.databinding.FragmentRecipeDetailBinding;
@@ -27,6 +30,8 @@ public class RecipeDetailFragment extends Fragment implements
     private static final String TAG = RecipeDetailFragment.class.getSimpleName();
 
     private static final String EXTRA_RECIPE = "com.udacity.bakingapp.model.Recipe";
+    private static final String WIDGET_DETAILS = "sharedPreferenceWidgetDetails";
+    private static final String KEY_RECIPE = "recipeJsonForWidget";
 
     private Recipe mRecipe;
     private OnStepClickListener mListener;
@@ -58,6 +63,16 @@ public class RecipeDetailFragment extends Fragment implements
             if (intent != null) {
                 mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
             }
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(WIDGET_DETAILS,
+                    Context.MODE_MULTI_PROCESS);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String recipeJson = new GsonBuilder().create().toJson(mRecipe, Recipe.class);
+            editor.putString(KEY_RECIPE, recipeJson);
+            editor.apply();
+
+            Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            getContext().sendBroadcast(widgetIntent);
         } else {
             mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
         }

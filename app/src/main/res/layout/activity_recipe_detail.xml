@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.RecipeDetailActivity">
+    tools:context=".activity.RecipeDetailActivity">
 
     <fragment
         android:id="@+id/recipe_detail_fragment"

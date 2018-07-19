@@ -1,4 +1,4 @@
-package com.udacity.bakingapp.util;
+package com.udacity.bakingapp.utility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

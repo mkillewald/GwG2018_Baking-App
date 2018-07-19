@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -31,8 +32,8 @@ import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.FragmentStepDetailBinding;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
-import com.udacity.bakingapp.ui.RecipeDetailActivity;
-import com.udacity.bakingapp.ui.StepDetailActivity;
+import com.udacity.bakingapp.activity.RecipeDetailActivity;
+import com.udacity.bakingapp.activity.StepDetailActivity;
 
 import java.util.Locale;
 
@@ -92,6 +93,8 @@ public class StepDetailFragment extends Fragment {
             mBinding.btnNextStep.setVisibility(View.GONE);
             mBinding.btnPrevStep.setVisibility(View.GONE);
         } else {
+            // invoke fullscreen if view is created in Landscape mode
+            checkOrientationForFullscreen();
 
             mBinding.btnPrevStep.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,20 +132,19 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if (mTwoPane) { return; }
 
+        checkOrientationForFullscreen();
+    }
+
+    private void checkOrientationForFullscreen() {
         StepDetailActivity hostActivity = (StepDetailActivity) getActivity();
 
-        if (!mTwoPane && getResources().getConfiguration().orientation ==
+        if (getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE) {
             mBinding.tvStepDescription.setVisibility(View.INVISIBLE);
             mBinding.btnPrevStep.setVisibility(View.INVISIBLE);
             mBinding.btnNextStep.setVisibility(View.INVISIBLE);
-
-            ConstraintLayout.LayoutParams params =
-                    (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
-            params.width=params.MATCH_PARENT;
-            params.height=params.MATCH_PARENT;
-            mBinding.exoPlayerView.setLayoutParams(params);
 
             // hide status bar
             hostActivity.getWindow().getDecorView()
@@ -153,24 +155,17 @@ public class StepDetailFragment extends Fragment {
             if (hostActivity.getSupportActionBar() != null) {
                 hostActivity.getSupportActionBar().hide();
             }
-
-        } else if (!mTwoPane && getResources().getConfiguration().orientation ==
+        } else if (getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_PORTRAIT) {
             mBinding.tvStepDescription.setVisibility(View.VISIBLE);
             showPrevAndNextButtons();
 
-            ConstraintLayout.LayoutParams params =
-                    (ConstraintLayout.LayoutParams) mBinding.exoPlayerView.getLayoutParams();
-            params.width=params.MATCH_PARENT;
-            params.height=605;
-            mBinding.exoPlayerView.setLayoutParams(params);
-
             // show status bar
             hostActivity.getWindow().getDecorView()
-                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE );
 
             // show action bar
-            if(hostActivity.getSupportActionBar()!=null) {
+            if (hostActivity.getSupportActionBar() != null) {
                 hostActivity.getSupportActionBar().show();
             }
         }

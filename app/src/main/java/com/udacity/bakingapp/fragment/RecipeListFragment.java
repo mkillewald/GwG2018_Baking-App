@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.adapter.RecipeAdapter;
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.util.RecipeListJson;
+import com.udacity.bakingapp.utility.RecipeListJson;
 
 import java.io.IOException;
 import java.net.URL;

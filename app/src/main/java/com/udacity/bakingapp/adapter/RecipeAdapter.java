@@ -69,11 +69,9 @@ public class RecipeAdapter extends
 
         holder.mBinding.setRecipe(recipe);
 
-        Step step0 = recipe.getSteps().get(0);
-
-        if (!step0.getThumbnailURL().isEmpty()) {
+        if (!recipe.getImage().isEmpty()) {
             Picasso.with(holder.itemView.getContext())
-                    .load(step0.getThumbnailURL())
+                    .load(recipe.getImage())
                     .placeholder(R.drawable.ic_kisspng_cupcake_frosting)
                     .into(holder.mBinding.ivRecipeThumbnail);
         }

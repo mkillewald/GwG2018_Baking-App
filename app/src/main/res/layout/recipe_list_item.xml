@@ -30,6 +30,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="@string/recipe_thumbnail_description"
                 android:src="@drawable/ic_kisspng_cupcake_frosting"/>
 
             <TextView
@@ -38,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/text_margin"
                 app:layout_constraintLeft_toRightOf="@id/iv_recipe_thumbnail"
+                app:layout_constraintStart_toEndOf="@id/iv_recipe_thumbnail"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -46,14 +49,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name" />
+                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name"
+                app:layout_constraintStart_toStartOf="@id/tv_recipe_name"/>
 
             <TextView
                 android:id="@+id/tv_recipe_servings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_number_of_steps"
-                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name" />
+                app:layout_constraintLeft_toLeftOf="@id/tv_recipe_name"
+                app:layout_constraintStart_toStartOf="@id/tv_recipe_name" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

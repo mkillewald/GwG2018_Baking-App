@@ -22,8 +22,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     private static final String WIDGET_DETAILS = "sharedPreferenceWidgetDetails";
     private static final String KEY_RECIPE = "recipeJsonForWidget";
 
-    private static Recipe mRecipe;
-
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -31,21 +29,21 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
                 Context.MODE_MULTI_PROCESS);
         Gson gson = new Gson();
         String recipeJson = sharedPreferences.getString(KEY_RECIPE, "");
-        mRecipe = RecipeJson.parse(recipeJson);
+        Recipe recipe = RecipeJson.parse(recipeJson);
 
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.recipe_widget_provider);
-        views.setTextViewText(R.id.tv_widget_recipe_name, mRecipe.getName());
+        views.setTextViewText(R.id.tv_widget_recipe_name, recipe.getName());
         views.setTextViewText(R.id.tv_widget_ingredients,
-                mRecipe.getformattedIngredientList(context));
+                recipe.getFormattedIngredientList(context));
 
         String servings = String.format(Locale.getDefault(),
                 context.getString(R.string.recipe_servings),
-                mRecipe.getServings());
+                recipe.getServings());
         views.setTextViewText(R.id.tv_widget_servings, servings);
 
         Intent intent = new Intent(context, RecipeDetailActivity.class);
-        intent.putExtra(EXTRA_RECIPE, mRecipe);
+        intent.putExtra(EXTRA_RECIPE, recipe);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);

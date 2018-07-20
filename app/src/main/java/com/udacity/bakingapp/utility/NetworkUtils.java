@@ -21,7 +21,7 @@ public class NetworkUtils {
 
     private static boolean mNetworkIsOnline;
 
-    public static URL getUrlfromString(String stringUrl) {
+    public static URL getUrlFromString(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
@@ -95,13 +95,13 @@ public class NetworkUtils {
 
     private static class CheckInternet extends AsyncTask<Void, Void, Boolean> {
 
-        private IsNetworkOnline mListener;
+        private final IsNetworkOnline mListener;
 
-        public interface IsNetworkOnline {
+        interface IsNetworkOnline {
             void checkNetwork(boolean isOnline);
         }
 
-        public CheckInternet(IsNetworkOnline listener) {
+        CheckInternet(IsNetworkOnline listener) {
             mListener = listener;
         }
 

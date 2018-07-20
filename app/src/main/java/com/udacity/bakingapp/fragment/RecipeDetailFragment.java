@@ -86,7 +86,7 @@ public class RecipeDetailFragment extends Fragment implements
 
         final View rootView = binding.getRoot();
 
-        binding.tvIngredientList.setText(mRecipe.getformattedIngredientList(getContext()));
+        binding.tvIngredientList.setText(mRecipe.getFormattedIngredientList(getContext()));
 
         String numberOfServings = String.format(Locale.getDefault(),
                 getString(R.string.recipe_servings), mRecipe.getServings());

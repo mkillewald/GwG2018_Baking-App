@@ -216,7 +216,12 @@ public class StepDetailFragment extends Fragment {
         updateUi();
     }
 
-    public void setTitleWithStep(Recipe recipe, int index) {
+    /**
+     * Sets ActionBar title with recipe name and current step
+     * @param recipe the current recipe object
+     * @param index the current step index
+     */
+    private void setTitleWithStep(Recipe recipe, int index) {
         Step step = recipe.getSteps().get(index);
         String title;
 

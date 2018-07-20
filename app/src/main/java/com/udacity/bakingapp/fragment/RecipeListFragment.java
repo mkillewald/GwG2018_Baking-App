@@ -39,7 +39,6 @@ public class RecipeListFragment extends Fragment implements
     private static final String RECIPES_URL =
             "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
-    private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipe> mRecipes;
 
@@ -70,7 +69,7 @@ public class RecipeListFragment extends Fragment implements
         final View rootView = inflater.inflate(R.layout.fragment_recipe_list, container,
                 false);
 
-        mRecyclerView = rootView.findViewById(R.id.rv_recipe_list);
+        RecyclerView recyclerView = rootView.findViewById(R.id.rv_recipe_list);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -79,13 +78,13 @@ public class RecipeListFragment extends Fragment implements
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), numOfColumns);
 
         mRecipeAdapter = new RecipeAdapter(getContext(), this);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mRecyclerView.setAdapter(mRecipeAdapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(mRecipeAdapter);
 
         if (savedInstanceState == null) {
             if (NetworkUtils.isNetworkOnline(getContext())) {
                 try {
-                    fetchRecipeList(NetworkUtils.getUrlfromString(RECIPES_URL));
+                    fetchRecipeList(NetworkUtils.getUrlFromString(RECIPES_URL));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -132,7 +131,7 @@ public class RecipeListFragment extends Fragment implements
         mListener = null;
     }
 
-    void fetchRecipeList(URL url) throws IOException {
+    private void fetchRecipeList(URL url) throws IOException {
         EspressoTestingIdlingResource.increment();
 
         OkHttpClient client = new OkHttpClient();

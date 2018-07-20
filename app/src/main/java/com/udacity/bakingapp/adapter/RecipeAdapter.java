@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.databinding.RecipeListItemBinding;
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.model.Step;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +19,7 @@ public class RecipeAdapter extends
         RecyclerView.Adapter<RecipeAdapter.RecipeAdapterImageViewHolder> {
 
     private List<Recipe> mRecipes;
-    private Context mContext;
+    private final Context mContext;
     private final RecipeAdapterOnClickHandler mClickHandler;
 
     public interface RecipeAdapterOnClickHandler {

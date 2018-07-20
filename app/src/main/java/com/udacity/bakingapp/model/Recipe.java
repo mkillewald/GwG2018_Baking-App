@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Parcelable {
@@ -78,7 +77,7 @@ public class Recipe implements Parcelable {
      * Returns formatted list of ingredients
      * @return the formatted String list of ingredients
      */
-    public String getformattedIngredientList(Context context) {
+    public String getFormattedIngredientList(Context context) {
         List<Ingredient> ingredients = getIngredients();
         StringBuilder builder = new StringBuilder();
         int listSize = ingredients.size();

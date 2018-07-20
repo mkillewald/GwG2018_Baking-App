@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.bakingapp.IdlingResource.EspressoTestingIdlingResource;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.adapter.RecipeAdapter;
 import com.udacity.bakingapp.model.Recipe;
@@ -132,6 +133,7 @@ public class RecipeListFragment extends Fragment implements
     }
 
     void fetchRecipeList(URL url) throws IOException {
+        EspressoTestingIdlingResource.increment();
 
         OkHttpClient client = new OkHttpClient();
 
@@ -150,6 +152,8 @@ public class RecipeListFragment extends Fragment implements
                         NetworkUtils.displayNetworkNotRespondingAlert(getContext());
                     }
                 });
+
+                EspressoTestingIdlingResource.decrement();
             }
 
             @Override
@@ -169,6 +173,8 @@ public class RecipeListFragment extends Fragment implements
                         }
                     }
                 });
+
+                EspressoTestingIdlingResource.decrement();
 
             }
         });

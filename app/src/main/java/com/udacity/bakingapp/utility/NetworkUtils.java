@@ -67,6 +67,7 @@ public class NetworkUtils {
 
 
     private static Boolean isNetworkEnabled(Context context) {
+        // code used from https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -107,6 +108,8 @@ public class NetworkUtils {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
+
+            // code used from https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
             try {
                 int timeoutMs = 1500;
                 Socket sock = new Socket();

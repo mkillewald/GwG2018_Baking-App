@@ -3,6 +3,7 @@ package com.udacity.bakingapp.IdlingResource;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.idling.CountingIdlingResource;
 
+// from https://pavneetsblog.wordpress.com/2017/10/13/testing-fragments-and-network-call-using-espresso/
 public class EspressoTestingIdlingResource {
     private static final String RESOURCE = "GLOBAL";
 

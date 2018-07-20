@@ -18,10 +18,8 @@ import com.google.gson.GsonBuilder;
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.adapter.StepAdapter;
 import com.udacity.bakingapp.databinding.FragmentRecipeDetailBinding;
-import com.udacity.bakingapp.model.Ingredient;
 import com.udacity.bakingapp.model.Recipe;
 
-import java.util.List;
 import java.util.Locale;
 
 public class RecipeDetailFragment extends Fragment implements
@@ -88,7 +86,7 @@ public class RecipeDetailFragment extends Fragment implements
 
         final View rootView = binding.getRoot();
 
-        binding.tvIngredientList.setText(formatIngredientList());
+        binding.tvIngredientList.setText(mRecipe.getformattedIngredientList(getContext()));
 
         String numberOfServings = String.format(Locale.getDefault(),
                 getString(R.string.recipe_servings), mRecipe.getServings());
@@ -137,27 +135,6 @@ public class RecipeDetailFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * Returns formatted list of ingredients
-     * @return the formatted String list of ingredients
-     */
-    private String formatIngredientList() {
-        List<Ingredient> ingredients = mRecipe.getIngredients();
-        StringBuilder builder = new StringBuilder();
-        int listSize = ingredients.size();
-
-        if (listSize > 0 ) {
-            for (int i = 0; i < listSize; i++) {
-                builder.append(ingredients.get(i).formatQuantityAndMeasure(getContext()));
-                if (i != listSize - 1) {
-                    builder.append("\n");
-                }
-            }
-        }
-
-        return builder.toString();
     }
 
 }

@@ -1,18 +1,14 @@
 package com.udacity.bakingapp.fragment;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.net.Network;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +51,8 @@ public class StepDetailFragment extends Fragment {
     private Recipe mRecipe;
     private int mStepIndex;
     private boolean mTwoPane;
+    private boolean mIsNetworkOnline;
+    private boolean mNetworkAlertShown;
 
     public StepDetailFragment() {
         // Mandatory empty constructor
@@ -245,24 +243,25 @@ public class StepDetailFragment extends Fragment {
     private void updateUi() {
         Step step = mRecipe.getSteps().get(mStepIndex);
 
-        boolean networkIsUp = NetworkUtils.isNetworkAvailable(getContext());
-
-        if (!networkIsUp) {
-            NetworkUtils.displayNetworkDownAlert(getContext());
+        if (!mNetworkAlertShown) {
+            mIsNetworkOnline = NetworkUtils.isNetworkOnline(getContext());
+            if (!mIsNetworkOnline) {
+                mNetworkAlertShown = true;
+            }
         }
 
-        if (!step.getVideoURL().isEmpty() && networkIsUp) {
+        if (!step.getVideoURL().isEmpty() && mIsNetworkOnline) {
             // if step video URL exists load into player
             initializePlayer(Uri.parse(step.getVideoURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-        } else if (step.getThumbnailURL().endsWith(".mp4") && networkIsUp) {
+        } else if (step.getThumbnailURL().endsWith(".mp4") && mIsNetworkOnline) {
             // since no video URL, check if thumbnailURL ends with .mp4
             // if it does, load that URL into player instead
             initializePlayer(Uri.parse(step.getThumbnailURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-        } else if (!step.getThumbnailURL().isEmpty()) {
+        } else if (!step.getThumbnailURL().isEmpty() && mIsNetworkOnline) {
             // at this point, if the thumbnail URL exists, display it in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);

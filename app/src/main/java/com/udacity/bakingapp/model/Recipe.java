@@ -1,6 +1,7 @@
 
 package com.udacity.bakingapp.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -71,6 +72,27 @@ public class Recipe implements Parcelable {
 
     public String getImage() {
         return image;
+    }
+
+    /**
+     * Returns formatted list of ingredients
+     * @return the formatted String list of ingredients
+     */
+    public String getformattedIngredientList(Context context) {
+        List<Ingredient> ingredients = getIngredients();
+        StringBuilder builder = new StringBuilder();
+        int listSize = ingredients.size();
+
+        if (listSize > 0 ) {
+            for (int i = 0; i < listSize; i++) {
+                builder.append(ingredients.get(i).formatQuantityAndMeasure(context));
+                if (i != listSize - 1) {
+                    builder.append("\n");
+                }
+            }
+        }
+
+        return builder.toString();
     }
 
 }

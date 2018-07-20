@@ -11,11 +11,9 @@ import android.widget.RemoteViews;
 
 import com.google.gson.Gson;
 import com.udacity.bakingapp.activity.RecipeDetailActivity;
-import com.udacity.bakingapp.model.Ingredient;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.utility.RecipeJson;
 
-import java.util.List;
 import java.util.Locale;
 
 public class RecipeWidgetProvider extends AppWidgetProvider {
@@ -38,7 +36,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.recipe_widget_provider);
         views.setTextViewText(R.id.tv_widget_recipe_name, mRecipe.getName());
-        views.setTextViewText(R.id.tv_widget_ingredients, formatIngredientList(context));
+        views.setTextViewText(R.id.tv_widget_ingredients,
+                mRecipe.getformattedIngredientList(context));
 
         String servings = String.format(Locale.getDefault(),
                 context.getString(R.string.recipe_servings),
@@ -81,27 +80,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         onUpdate(context, AppWidgetManager.getInstance(context), appWidgetIds);
 
         super.onReceive(context, intent);
-    }
-
-    /**
-     * Returns formatted list of ingredients
-     * @return the formatted String list of ingredients
-     */
-    private static String formatIngredientList(Context context) {
-        List<Ingredient> ingredients = mRecipe.getIngredients();
-        StringBuilder builder = new StringBuilder();
-        int listSize = ingredients.size();
-
-        if (listSize > 0 ) {
-            for (int i = 0; i < listSize; i++) {
-                builder.append(ingredients.get(i).formatQuantityAndMeasure(context));
-                if (i != listSize - 1) {
-                    builder.append("\n");
-                }
-            }
-        }
-
-        return builder.toString();
     }
 }
 

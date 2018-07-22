@@ -3,6 +3,7 @@ package com.udacity.bakingapp.adapter;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class RecipeAdapter extends
 
         holder.mBinding.setRecipe(recipe);
 
-        if (!recipe.getImage().isEmpty()) {
+        if (!TextUtils.isEmpty(recipe.getImage())) {
             Picasso.with(holder.itemView.getContext())
                     .load(recipe.getImage())
                     .placeholder(R.drawable.ic_kisspng_cupcake_frosting)

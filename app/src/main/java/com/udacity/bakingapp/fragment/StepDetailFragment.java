@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +46,18 @@ public class StepDetailFragment extends Fragment {
     private static final String EXTRA_STEP_INDEX = "stepIndex";
     private static final String EXTRA_TWO_PANE = "twoPaneBoolean";
     private static final String EXTRA_EXO_PLAYER_POSITION = "exoPlayerPosition";
+    private static final String EXTRA_EXO_PLAYER_PLAY_WHEN_READY = "exoPlayerPlayWhenReady";
 
     private FragmentStepDetailBinding mBinding;
+
     private SimpleExoPlayer mExoPlayer;
-    private long mExoPlayerPosition = 0;
+    private long mExoPlayerPosition;
+    private boolean mExoPlayerPlayWhenReady;
+
     private Recipe mRecipe;
     private int mStepIndex;
     private boolean mTwoPane;
+
     private boolean mIsNetworkOnline;
     private boolean mNetworkAlertShown;
 
@@ -64,6 +71,8 @@ public class StepDetailFragment extends Fragment {
 
         if (savedInstanceState == null) {
             Intent intent = getActivity().getIntent();
+            mExoPlayerPosition = 0;
+            mExoPlayerPlayWhenReady = true;
             if (intent != null && !mTwoPane) {
                 mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
                 mStepIndex = intent.getIntExtra(EXTRA_STEP_INDEX, 0);
@@ -73,6 +82,7 @@ public class StepDetailFragment extends Fragment {
             mStepIndex = savedInstanceState.getInt(EXTRA_STEP_INDEX);
             mTwoPane = savedInstanceState.getBoolean(EXTRA_TWO_PANE);
             mExoPlayerPosition = savedInstanceState.getLong(EXTRA_EXO_PLAYER_POSITION);
+            mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXTRA_EXO_PLAYER_PLAY_WHEN_READY);
         }
 
         setTitleWithStep(mRecipe, mStepIndex);
@@ -126,17 +136,11 @@ public class StepDetailFragment extends Fragment {
 
         if (mExoPlayer != null) {
             outState.putLong(EXTRA_EXO_PLAYER_POSITION, mExoPlayer.getCurrentPosition());
+            outState.putBoolean(EXTRA_EXO_PLAYER_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
         } else {
             outState.putLong(EXTRA_EXO_PLAYER_POSITION, mExoPlayerPosition);
+            outState.putBoolean(EXTRA_EXO_PLAYER_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mTwoPane) { return; }
-
-        checkOrientationForFullscreen();
     }
 
     private void checkOrientationForFullscreen() {
@@ -174,10 +178,27 @@ public class StepDetailFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23 && mExoPlayer == null) {
+            Log.d("DEBUG onStart: ", "mExoPlayerPlayWhenReady = " + mExoPlayerPlayWhenReady);
+            updateUi();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= 23 && mExoPlayer == null) {
+            Log.d("DEBUG onResume: ", "mExoPlayerPlayWhenReady = " + mExoPlayerPlayWhenReady);
+            updateUi();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         releasePlayer();
-
     }
 
     @Override
@@ -213,6 +234,7 @@ public class StepDetailFragment extends Fragment {
 
         releasePlayer();
         mExoPlayerPosition = 0;
+        mExoPlayerPlayWhenReady = true;
         updateUi();
     }
 
@@ -255,7 +277,7 @@ public class StepDetailFragment extends Fragment {
             }
         }
 
-        if (!step.getVideoURL().isEmpty() && mIsNetworkOnline) {
+        if (!TextUtils.isEmpty(step.getVideoURL()) && mIsNetworkOnline) {
             // if step video URL exists load into player
             initializePlayer(Uri.parse(step.getVideoURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
@@ -266,7 +288,7 @@ public class StepDetailFragment extends Fragment {
             initializePlayer(Uri.parse(step.getThumbnailURL()));
             mBinding.exoPlayerView.setVisibility(View.VISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.INVISIBLE);
-        } else if (!step.getThumbnailURL().isEmpty() && mIsNetworkOnline) {
+        } else if (!TextUtils.isEmpty(step.getThumbnailURL()) && mIsNetworkOnline) {
             // at this point, if the thumbnail URL exists, display it in the ImageView
             mBinding.exoPlayerView.setVisibility(View.INVISIBLE);
             mBinding.ivStepThumbnail.setVisibility(View.VISIBLE);
@@ -324,13 +346,14 @@ public class StepDetailFragment extends Fragment {
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.seekTo(mExoPlayerPosition);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
         }
     }
 
     private void releasePlayer() {
         if (mExoPlayer == null) return;
         mExoPlayerPosition = mExoPlayer.getCurrentPosition();
+        mExoPlayerPlayWhenReady = mExoPlayer.getPlayWhenReady();
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;

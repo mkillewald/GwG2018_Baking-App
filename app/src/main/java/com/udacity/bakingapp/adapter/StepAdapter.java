@@ -2,6 +2,7 @@ package com.udacity.bakingapp.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class StepAdapter extends
 
         holder.mBinding.setStep(step);
 
-        if (!step.getThumbnailURL().isEmpty()) {
+        if (!TextUtils.isEmpty(step.getThumbnailURL())) {
             Picasso.with(holder.itemView.getContext())
                     .load(step.getThumbnailURL())
                     .placeholder(R.drawable.ic_spoon)

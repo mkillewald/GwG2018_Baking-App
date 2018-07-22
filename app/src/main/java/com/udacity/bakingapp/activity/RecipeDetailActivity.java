@@ -1,8 +1,10 @@
 package com.udacity.bakingapp.activity;
 
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.udacity.bakingapp.R;
 import com.udacity.bakingapp.fragment.RecipeDetailFragment;
@@ -26,12 +28,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         if (savedInstanceState == null) {
             mRecipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
+            mTwoPane = getResources().getBoolean(R.bool.isTablet);
 
-            if (findViewById(R.id.step_detail_container) != null) {
-                mTwoPane = true;
-
+            if (mTwoPane) {
                 StepDetailFragment fragment = new StepDetailFragment();
                 fragment.setRecipe(mRecipe);
                 fragment.setTwoPane(mTwoPane);
@@ -39,8 +44,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.step_detail_container, fragment)
                         .commit();
-            } else {
-                mTwoPane = false;
             }
         } else {
             mRecipe = savedInstanceState.getParcelable(EXTRA_RECIPE);
@@ -80,5 +83,16 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

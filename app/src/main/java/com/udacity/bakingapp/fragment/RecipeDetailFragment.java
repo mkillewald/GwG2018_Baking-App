@@ -63,7 +63,7 @@ public class RecipeDetailFragment extends Fragment implements
             }
 
             SharedPreferences sharedPreferences = getContext().getSharedPreferences(WIDGET_DETAILS,
-                    Context.MODE_MULTI_PROCESS);
+                    Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             String recipeJson = new GsonBuilder().create().toJson(mRecipe, Recipe.class);
             editor.putString(KEY_RECIPE, recipeJson);

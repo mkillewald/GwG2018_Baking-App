@@ -26,7 +26,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(WIDGET_DETAILS,
-                Context.MODE_MULTI_PROCESS);
+                Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String recipeJson = sharedPreferences.getString(KEY_RECIPE, "");
         Recipe recipe = RecipeJson.parse(recipeJson);
